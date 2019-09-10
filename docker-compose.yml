@@ -20,8 +20,6 @@ php:
   expose:
     - "8088"
     - "9000"
-#  links:
-#    - admin_websocket:admin_websocket
   volumes:
     - ./:/usr/share/nginx/html
     - ./shared:/www/boke/shared
