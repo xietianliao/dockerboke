@@ -1,0 +1,39 @@
+nginx:
+  image: nginx
+  container_name: bxvip_payadmin_nginx
+  expose:
+    - "80"
+    - "443"
+  links:
+    - php:php
+  volumes:
+    - ./:/usr/share/nginx/html
+    - ./shared:/www/bxvip_pay/shared
+    - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    - ./docker/nginx/conf.d/:/etc/nginx/conf.d/:ro
+  environment:
+    - VIRTUAL_HOST=payadminqat.sg04.com
+
+php:
+  image: bxvip_php
+  container_name: bxvip_payadmin_php
+  expose:
+    - "8088"
+    - "9000"
+  links:
+      - admin_websocket:admin_websocket
+  volumes:
+    - ./:/usr/share/nginx/html
+    - ./shared:/www/bxvip_pay/shared
+    - ./docker/php/php.ini:/usr/local/etc/php/php.ini:ro
+    - ./docker/php/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
+
+admin_websocket:
+  image: admin_websocket
+  container_name: admin_websocket
+  ports:
+    - "13000:13000"
+  volumes:
+    - ./:/usr/share/nginx/html
+    - ./socket/php.ini:/usr/local/etc/php/php.ini:ro
+    - ./socket/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
